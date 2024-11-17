@@ -4,11 +4,28 @@ using UnityEngine;
 using UnityEditor.EventSystems;
 using UnityEngine.EventSystems;
 
+public enum FieldType
+{
+    SELF_HAND,
+    SELF_FIELD,
+    ENEMY_HAND,
+    ENEMY_FIELD
+}
+
 public class drop : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
+
+    public FieldType Type;
+
     public void OnDrop(PointerEventData eventData)
     {
-        CardSrc selectCard = eventData.pointerDrag.GetComponent<CardSrc>();
+        if (Type != FieldType.SELF_FIELD)
+        {
+            return;
+        }
+
+
+        CardMovementSrc selectCard = eventData.pointerDrag.GetComponent<CardMovementSrc>();
         if (selectCard)
         {
             selectCard.DefaultParent = transform;
@@ -17,12 +34,12 @@ public class drop : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerE
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (eventData.pointerDrag == null)
+        if (eventData.pointerDrag == null || Type == FieldType.ENEMY_FIELD || Type == FieldType.ENEMY_HAND)
         {
             return;
         }
 
-        CardSrc selectCard = eventData.pointerDrag.GetComponent<CardSrc>();
+        CardMovementSrc selectCard = eventData.pointerDrag.GetComponent<CardMovementSrc>();
 
         if (selectCard)
         {
@@ -37,7 +54,7 @@ public class drop : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerE
             return;
         }
 
-        CardSrc selectCard = eventData.pointerDrag.GetComponent<CardSrc>();
+        CardMovementSrc selectCard = eventData.pointerDrag.GetComponent<CardMovementSrc>();
 
         if (selectCard && selectCard.DefaultTempCardPatent == transform)
         {

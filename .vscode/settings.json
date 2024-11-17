@@ -56,5 +56,8 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "CardGame.sln"
+    "dotnet.defaultSolution": "CardGame.sln",
+    "cSpell.words": [
+        "Zenject"
+    ]
 }
