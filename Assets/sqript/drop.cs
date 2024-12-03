@@ -26,15 +26,17 @@ public class drop : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerE
 
 
         CardMovementSrc selectCard = eventData.pointerDrag.GetComponent<CardMovementSrc>();
-        if (selectCard)
+        if (selectCard && selectCard.GameManager.PlayerFieldCards.Count < 6 && selectCard.GameManager.IsPlayerTurn)
         {
+            selectCard.GameManager.PlayerFieldCards.Remove(selectCard.GetComponent<CardInfoScr>());
+            selectCard.GameManager.PlayerFieldCards.Add(selectCard.GetComponent<CardInfoScr>());
             selectCard.DefaultParent = transform;
         }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (eventData.pointerDrag == null || Type == FieldType.ENEMY_FIELD || Type == FieldType.ENEMY_HAND)
+        if (eventData.pointerDrag == null || Type == FieldType.ENEMY_FIELD || Type == FieldType.ENEMY_HAND || Type == FieldType.SELF_HAND)
         {
             return;
         }

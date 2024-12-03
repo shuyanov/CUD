@@ -9,12 +9,32 @@ public struct Card
     public string Name;
     public Sprite Logo;
     public int Attack, Defense;
+    public bool CanAttack;
+
+    public bool IsAlive
+    {
+        get
+        {
+            return Defense > 0;
+        }
+    }
     public Card(string name, string logoPath, int attack, int defense)
     {
         Name = name;
         Logo = Resources.Load<Sprite>(logoPath);
         Attack = attack;
         Defense = defense;
+        CanAttack = false;
+    }
+
+    public void ChangeAttackState(bool can)
+    {
+        CanAttack = can;
+    }
+
+    public void GetDamage(int dmg)
+    {
+        Defense -= dmg;
     }
 }
 

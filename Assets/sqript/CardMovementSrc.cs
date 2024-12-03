@@ -9,19 +9,24 @@ public class CardMovementSrc : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     Vector3 offset;
     public Transform DefaultParent, DefaultTempCardPatent;
     GameObject TempCardGo;
+    public GameManagerScr GameManager;
     public bool IsDraggable;
 
     void Awake()
     {
         MainCamera = Camera.allCameras[0];
         TempCardGo = GameObject.Find("TempCardGo");
+        GameManager = FindObjectOfType<GameManagerScr>();
     }
     public void OnBeginDrag(PointerEventData eventData)
     {
         offset = transform.position - MainCamera.ScreenToWorldPoint(eventData.position);
 
         DefaultParent = DefaultTempCardPatent = transform.parent;
-        IsDraggable = DefaultParent.GetComponent<drop>().Type == FieldType.SELF_HAND;
+        IsDraggable = (
+            DefaultParent.GetComponent<drop>().Type == FieldType.SELF_HAND
+        || DefaultParent.GetComponent<drop>().Type == FieldType.SELF_FIELD) && GameManager.IsPlayerTurn;
+
 
         if (!IsDraggable)
             return;
@@ -41,6 +46,11 @@ public class CardMovementSrc : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         transform.position = newPos + offset;
 
         if (TempCardGo.transform.parent != DefaultTempCardPatent)
+        {
+            TempCardGo.transform.SetParent(DefaultTempCardPatent);
+        }
+
+        if (DefaultParent.GetComponent<drop>().Type != FieldType.SELF_FIELD)
         {
             TempCardGo.transform.SetParent(DefaultTempCardPatent);
         }
